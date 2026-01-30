@@ -1,6 +1,7 @@
 // server.js
 import express from 'express';
 import axios from 'axios';
+import cors from 'cors';
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import path from 'path';
@@ -13,44 +14,46 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
+// Middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
 // Routes
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.post('/api/fetch-profile', async (req, res) => {
-    try {
-        const { url } = req.body;
+  try {
+    const { url } = req.body;
 
-        if (!url) {
-            return res.status(400).json({ error: 'URL is required' });
-        }
-
-        if (!url.includes('skillrack.com') || !url.includes('profile')) {
-            return res.status(400).json({ error: 'Invalid SkillRack profile URL' });
-        }
-
-        const data = await fetchData(url);
-
-        if (!data) {
-            return res.status(500).json({ error: 'Failed to fetch profile data' });
-        }
-
-        // Add additional fields for the API response
-        const responseData = {
-            ...data,
-            rollNumber: data.rollNumber,
-            yearInfo: data.yearInfo
-        };
-
-        res.json(responseData);
-    } catch (error) {
-        console.error('API Error:', error);
-        res.status(500).json({ error: 'Internal server error' });
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
     }
+
+    if (!url.includes('skillrack.com') || !url.includes('profile')) {
+      return res.status(400).json({ error: 'Invalid SkillRack profile URL' });
+    }
+
+    const data = await fetchData(url);
+
+    if (!data) {
+      return res.status(500).json({ error: 'Failed to fetch profile data' });
+    }
+
+    // Add additional fields for the API response
+    const responseData = {
+      ...data,
+      rollNumber: data.rollNumber,
+      yearInfo: data.yearInfo
+    };
+
+    res.json(responseData);
+  } catch (error) {
+    console.error('API Error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 async function fetchData(url) {
@@ -91,6 +94,9 @@ async function fetchData(url) {
 
     // Calculate points
     const points = codeTrack * 2 + codeTest * 30 + dt * 20 + dc * 2;
+
+    // Total Solved = Daily Challenge (dt) + Daily Test (codeTutor) + Code Track (dc) + Code Test (codeTrack) + Code Tutor (codeTest/Programs Solved)
+    const totalSolved = dt + codeTutor + dc + codeTrack + codeTest;
 
     // Format last fetched date
     const date = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', hour12: true });
@@ -146,10 +152,10 @@ async function fetchData(url) {
 </body>
 </html>`;
 
-    // Write HTML file
-    const fileName = `skillrack_profile_${id}.html`;
-    fs.writeFileSync(fileName, htmlContent);
-    console.log(`\nHTML file generated: ${fileName}`);
+    // Write HTML file - DISABLED to prevent Live Server auto-reload
+    // const fileName = `skillrack_profile_${id}.html`;
+    // fs.writeFileSync(fileName, htmlContent);
+    // console.log(`\nHTML file generated: ${fileName}`);
 
     // Display results in console
     console.log('\n=== SkillRack Profile Data ===');
@@ -170,10 +176,10 @@ async function fetchData(url) {
     console.log(`Last Fetched: ${lastFetched}`);
     console.log('============================\n');
 
-    return { 
-      id, name, dept, year, college, 
-      codeTutor, codeTrack, codeTest, dt, dc, 
-      points, lastFetched, url 
+    return {
+      id, name, dept, year, college,
+      codeTutor, codeTrack, codeTest, dt, dc,
+      points, totalSolved, lastFetched, url
     };
   } catch (error) {
     console.error(`Error fetching data: ${error.message}`);
