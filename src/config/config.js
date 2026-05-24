@@ -1,9 +1,10 @@
 // src/config/config.js
+import 'dotenv/config';
 
 export const config = {
-  PORT: process.env.PORT || 3000,
+  PORT: parseInt(process.env.PORT) || 3000,
   SCRAPER: {
-    timeout: 10000,
+    timeout: parseInt(process.env.SCRAPER_TIMEOUT) || 10000,
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
     }
