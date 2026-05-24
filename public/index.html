@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillRack Profile Analytics</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: rgba(17, 24, 39, 0.7);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --accent-primary: #6366f1;
+            /* Indigo */
+            --accent-secondary: #06b6d4;
+            /* Cyan */
+            --accent-green: #10b981;
+            /* Emerald */
+            --text-primary: #f3f4f6;
+            --text-secondary: #9ca3af;
+            --glow-indigo: rgba(99, 102, 241, 0.15);
+            --glow-cyan: rgba(6, 182, 212, 0.15);
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image:
+                radial-gradient(circle at 10% 20%, var(--glow-indigo) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, var(--glow-cyan) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        header {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            font-size: 2.2rem;
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #ffffff 60%, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-tagline {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 400;
+            max-width: 500px;
+            margin: 0.5rem auto 0;
+            line-height: 1.5;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem 4rem;
+        }
+
+        /* Glassmorphic Card Style */
+        .glass-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform var(--transition-speed) ease, border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(99, 102, 241, 0.25);
+            box-shadow: 0 12px 40px 0 rgba(99, 102, 241, 0.1);
+        }
+
+        /* Input Panel */
+        .search-panel {
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-primary), var(--accent-secondary), transparent);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
+        }
+
+        .input-field {
+            flex: 1;
+            background: rgba(10, 15, 30, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-secondary);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            transition: opacity var(--transition-speed) ease, transform 0.1s ease;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-submit:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+
+        .btn-submit:disabled {
+            background: #374151;
+            color: #9ca3af;
+            box-shadow: none;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* States */
+        .state-container {
+            padding: 3rem 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .state-icon {
+            font-size: 3rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .state-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .state-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 400px;
+            line-height: 1.5;
+        }
+
+        .error-message {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            display: none;
+            margin-bottom: 2rem;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        /* Dashboard Results Grid */
+        #results-container {
+            display: none;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Top Highlights Block */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card-glow-indigo::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .stat-card-glow-cyan::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .stat-icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .bg-indigo-light {
+            background: rgba(99, 102, 241, 0.1);
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .bg-cyan-light {
+            background: rgba(6, 182, 212, 0.1);
+            color: #22d3ee;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #fff 70%, #d1d5db);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Two Column Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .input-wrapper {
+                flex-direction: column;
+            }
+
+            .btn-submit {
+                width: 100%;
+            }
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .panel-title span {
+            color: var(--accent-secondary);
+        }
+
+        .profile-panel {
+            padding: 1.75rem;
+            height: 100%;
+        }
+
+        .profile-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .profile-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .profile-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-value {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            word-break: break-word;
+        }
+
+        .points-panel {
+            padding: 1.75rem;
+        }
+
+        /* Score Cards list */
+        .score-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .score-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: background var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        .score-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .score-num {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Outfit', sans-serif;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .score-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .score-points {
+            font-size: 0.7rem;
+            color: var(--accent-secondary);
+            margin-top: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* Details link card */
+        .footer-card {
+            margin-top: 1.5rem;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+
+        .footer-card a {
+            color: var(--accent-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color var(--transition-speed);
+        }
+
+        .footer-card a:hover {
+            color: #22d3ee;
+            text-decoration: underline;
+        }
+
+        .footer-info {
+            color: var(--text-secondary);
+        }
+
+        footer {
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-container">
+            <span class="logo-icon">⚡</span>
+            <span class="logo-text">SkillRack</span>
+        </div>
+        <div class="logo-tagline">Visualize, analyze, and track performance scores with advanced scraper modules.</div>
+    </header>
+
+    <main>
+        <!-- Error Banner -->
+        <div id="error-banner" class="error-message">
+            <span>❌</span>
+            <span id="error-text">An error occurred while fetching the profile.</span>
+        </div>
+
+        <!-- Scraping Input Panel -->
+        <section class="glass-card search-panel">
+            <div class="form-group">
+                <label class="form-label" for="profile-url">Enter SkillRack Profile URL</label>
+                <div class="input-wrapper">
+                    <input type="url" id="profile-url" class="input-field"
+                        placeholder="https://www.skillrack.com/profile/123456/..." required />
+                    <button id="btn-submit" class="btn-submit" onclick="fetchProfile()">
+                        <span class="spinner" id="spinner"></span>
+                        <span id="btn-text">Analyze Profile</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Initial Placeholder State -->
+        <section id="placeholder-state" class="glass-card state-container">
+            <div class="state-icon">📊</div>
+            <h2 class="state-title">Ready for Scrape</h2>
+            <p class="state-desc">Input a valid SkillRack candidate profile URL to extract academic information and
+                compute score breakdown metrics.</p>
+        </section>
+
+        <!-- Loading State -->
+        <section id="loading-state" class="glass-card state-container" style="display: none;">
+            <div class="state-icon">🔍</div>
+            <h2 class="state-title">Scraping HTML...</h2>
+            <p class="state-desc" id="loading-desc">Sending secure network requests to parse and extract score segments
+                using modular parsers.</p>
+        </section>
+
+        <!-- Results Dashboard Container -->
+        <div id="results-container">
+            <!-- Metrics Cards Grid -->
+            <div class="highlights-grid">
+                <div class="glass-card stat-card stat-card-glow-indigo">
+                    <div class="stat-icon-wrapper bg-indigo-light">🏆</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Points Computed</span>
+                        <span class="stat-value" id="res-points">0</span>
+                    </div>
+                </div>
+                <div class="glass-card stat-card stat-card-glow-cyan">
+                    <div class="stat-icon-wrapper bg-cyan-light">🚀</div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Programs Solved</span>
+                        <span class="stat-value" id="res-solved">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Two-Column Layout -->
+            <div class="content-grid">
+                <!-- Profile details -->
+                <div class="glass-card profile-panel">
+                    <h3 class="panel-title">👤 Student <span>Profile</span></h3>
+                    <ul class="profile-list">
+                        <li class="profile-item">
+                            <span class="profile-label">Name</span>
+                            <span class="profile-value" id="res-name">--</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="profile-label">Roll Number</span>
+                            <span class="profile-value" id="res-roll">--</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="profile-label">Department</span>
+                            <span class="profile-value" id="res-dept">--</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="profile-label">College</span>
+                            <span class="profile-value" id="res-college">--</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="profile-label">Academic Year</span>
+                            <span class="profile-value" id="res-year">--</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Score statistics -->
+                <div class="glass-card points-panel">
+                    <h3 class="panel-title">📈 Points <span>Breakdown</span></h3>
+
+                    <div class="score-list">
+                        <div class="score-item">
+                            <div class="score-num" id="res-tutor">0</div>
+                            <div class="score-label">Code Tutor</div>
+                            <div class="score-points">Solved</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-num" id="res-track">0</div>
+                            <div class="score-label">Code Track</div>
+                            <div class="score-points" id="res-track-pts">+0 pts</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-num" id="res-test">0</div>
+                            <div class="score-label">Code Test</div>
+                            <div class="score-points" id="res-test-pts">+0 pts</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-num" id="res-dt">0</div>
+                            <div class="score-label">Daily Challenge (DT)</div>
+                            <div class="score-points" id="res-dt-pts">+0 pts</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-num" id="res-dc">0</div>
+                            <div class="score-label">Code Track (DC)</div>
+                            <div class="score-points" id="res-dc-pts">+0 pts</div>
+                        </div>
+                    </div>
+
+                    <!-- Footer information -->
+                    <div class="footer-card">
+                        <div class="footer-info">
+                            Last fetched: <strong id="res-time">--</strong>
+                        </div>
+                        <a href="#" id="res-url" target="_blank">View Original Profile ↗</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 SkillRack Scraper API - Clean Modular Express Backend architecture.</p>
+    </footer>
+
+    <script>
+        async function fetchProfile() {
+            const urlInput = document.getElementById('profile-url');
+            const submitBtn = document.getElementById('btn-submit');
+            const spinner = document.getElementById('spinner');
+            const btnText = document.getElementById('btn-text');
+            const errorBanner = document.getElementById('error-banner');
+            const errorText = document.getElementById('error-text');
+
+            const placeholderState = document.getElementById('placeholder-state');
+            const loadingState = document.getElementById('loading-state');
+            const resultsContainer = document.getElementById('results-container');
+
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                showError('Please enter a valid SkillRack profile URL.');
+                return;
+            }
+
+            // Reset UI states
+            errorBanner.style.display = 'none';
+            placeholderState.style.display = 'none';
+            resultsContainer.style.display = 'none';
+            loadingState.style.display = 'flex';
+
+            // Disable submit button & show spinner
+            submitBtn.disabled = true;
+            spinner.style.display = 'inline-block';
+            btnText.textContent = 'Parsing...';
+
+            try {
+                const response = await fetch('/api/fetch-profile', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Server responded with an error.');
+                }
+
+                // Render dashboard statistics
+                document.getElementById('res-points').textContent = Number(data.points).toLocaleString();
+                document.getElementById('res-solved').textContent = Number(data.totalSolved).toLocaleString();
+                document.getElementById('res-name').textContent = data.name;
+                document.getElementById('res-roll').textContent = data.rollNumber;
+                document.getElementById('res-dept').textContent = data.dept;
+                document.getElementById('res-college').textContent = data.college;
+                document.getElementById('res-year').textContent = data.year;
+
+                document.getElementById('res-tutor').textContent = data.codeTutor;
+                document.getElementById('res-track').textContent = data.codeTrack;
+                document.getElementById('res-track-pts').textContent = `+${data.codeTrack * 2} pts`;
+                document.getElementById('res-test').textContent = data.codeTest;
+                document.getElementById('res-test-pts').textContent = `+${data.codeTest * 30} pts`;
+
+                document.getElementById('res-dt').textContent = data.dt;
+                document.getElementById('res-dt-pts').textContent = `+${data.dt * 20} pts`;
+                document.getElementById('res-dc').textContent = data.dc;
+                document.getElementById('res-dc-pts').textContent = `+${data.dc * 2} pts`;
+
+                document.getElementById('res-time').textContent = data.lastFetched;
+                document.getElementById('res-url').href = data.url;
+
+                // Toggle states
+                loadingState.style.display = 'none';
+                resultsContainer.style.display = 'block';
+
+            } catch (err) {
+                loadingState.style.display = 'none';
+                placeholderState.style.display = 'flex';
+                showError(err.message || 'Network connection failed.');
+            } finally {
+                // Restore button
+                submitBtn.disabled = false;
+                spinner.style.display = 'none';
+                btnText.textContent = 'Analyze Profile';
+            }
+        }
+
+        function showError(msg) {
+            const errorBanner = document.getElementById('error-banner');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = msg;
+            errorBanner.style.display = 'flex';
+            errorBanner.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+
+</html>
